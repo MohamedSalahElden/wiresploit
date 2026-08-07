@@ -23,11 +23,11 @@ flowchart TD
     CN["Capture Nodes<br/>Onboard Bus Capture"]
     WIRELESS_CAPTURE["Wireless Capture"]
 
-<<<<<<< HEAD
+
     CORE["Core<br/>Event Processing + Correlation<br/>Time Synchronization"]
-=======
+
     TIMESTAMP["Timestamping & Time Synchronization<br/>Common Time Reference"]
->>>>>>> 863bbd217750f30a909561d07324cc2c49e8fd44
+
 
     BRAIN["Brain<br/>Event Processing + Protocol Decoding"]
 
@@ -45,18 +45,8 @@ flowchart TD
     BUS --> CN
     WIRELESS --> WIRELESS_CAPTURE
 
-<<<<<<< HEAD
     CN --> CORE
     CORE --> TIMELINE
-=======
-    NET_CAPTURE --> TIMESTAMP
-    CN --> TIMESTAMP
-    WIRELESS_CAPTURE --> TIMESTAMP
-
-    TIMESTAMP --> BRAIN
-    BRAIN --> CORRELATION
-    CORRELATION --> TIMELINE
->>>>>>> 863bbd217750f30a909561d07324cc2c49e8fd44
     TIMELINE --> ANALYST
 ```
 
@@ -68,7 +58,6 @@ flowchart TD
 | FR-MON-01-2 | The system shall display onboard-bus communication events. | Must | Supported onboard-bus events are visible in the monitoring interface. |
 | FR-MON-01-3 | The system shall display wireless communication events. | Must | Supported wireless events are visible in the monitoring interface. |
 | FR-MON-01-4 | The system shall provide a unified live view of captured communications. | Must | Events from supported sources appear in one live interface. |
-<<<<<<< HEAD
 | FR-MON-02-1 | The system shall correlate related communication events. | Must | Related events are grouped or linked correctly. |
 | FR-MON-02-2 | The system shall order correlated events chronologically. | Must | Events appear in correct time order on the timeline. |
 | FR-MON-03-1 | The system shall display live events within a documented latency limit. | Should | Measured event-to-display latency is documented and validated. |
@@ -81,27 +70,12 @@ flowchart TD
 | FR-MON-06-2 | The system shall support triggering a Snapshot Node after a defined delay. | Should | The Snapshot Node is triggered after the configured delay. |
 | FR-MON-06-3 | The system shall support triggering a Snapshot Node based on a detected packet or pattern. | Should | Detection of a configured packet or pattern activates the Snapshot Node. |
 | FR-MON-06-4 | The system shall capture the configured DUT state when a Snapshot Node is triggered. | Should | The configured physical, electrical, or internal state is captured. |
-=======
-| FR-MON-02-1 | The system shall order events. | Must | Events appear in correct time order on the timeline. |
-| FR-MON-03-1 | The system shall decode captured communication data from supported protocols. | Must | Captured data is decoded and displayed according to the selected protocol. |
-| FR-MON-03-2 | The system shall record system errors in a dedicated error log file. | Must | Each error is recorded with its timestamp, error type, and error message. |
-| FR-MON-04-1 | The system shall synchronize the Brain and all data-capturing devices, including Capture Nodes, Network Capture components, and Wireless Capture components, to a common time reference. | Must | The Brain and all data-capturing devices use the configured common time reference. |
-| FR-MON-04-2 | The system shall measure, document, and monitor the maximum clock drift between the Brain and all data-capturing devices. | Must | The maximum observed clock drift is measured, documented, and displayed in the monitoring interface. |
-| FR-MON-05-1 | The system shall support monitoring through multiple Capture Nodes. | Should | Multiple Capture Nodes can provide captured events to the monitoring system. |
-| FR-MON-05-2 | The system shall support monitoring of HTTP, TCP, Ethernet, Wi-Fi, I2C, SPI, UART, GPIO, Bluetooth, LoRa, and RFID communication protocols. | Must | The system can simultaneously capture and display events from all listed communication protocols. |
-| FR-MON-06-1 | The system shall support triggering a Snapshot Node after a defined delay. | Should | The Snapshot Node is triggered after the configured delay. |
-| FR-MON-06-2 | The system shall support triggering a Snapshot Node based on a detected packet or pattern. | Should | Detection of a packet or pattern activates the Snapshot Node. |
-| FR-MON-06-3 | The system shall capture the DUT state when a Snapshot Node is triggered. | Should | The  physical, electrical, or internal state is captured. |
->>>>>>> 863bbd217750f30a909561d07324cc2c49e8fd44
 | FR-MON-07-1 | The system shall timestamp Snapshot Node outputs. | Should | Each snapshot output contains a timestamp. |
 
 ### Assumptions & Dependencies
-<<<<<<< HEAD
 - Capture Nodes and the Core can synchronize to a common local time reference.
-=======
 
 - The Brain can synchronize to a common local time reference.
->>>>>>> 863bbd217750f30a909561d07324cc2c49e8fd44
 - Required hardware for supported network, onboard-bus, wireless, and snapshot monitoring is available.
 - Snapshot capabilities depend on the type of Snapshot Node being used.
 - Maximum supported nodes, protocols, latency, and clock drift require validation on the final hardware configuration.
