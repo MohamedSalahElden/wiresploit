@@ -23,15 +23,9 @@ flowchart TD
     CN["Capture Nodes<br/>Onboard Bus Capture"]
     WIRELESS_CAPTURE["Wireless Capture"]
 
-
-    CORE["Core<br/>Event Processing + Correlation<br/>Time Synchronization"]
-
     TIMESTAMP["Timestamping & Time Synchronization<br/>Common Time Reference"]
 
-
-    BRAIN["Brain<br/>Event Processing + Protocol Decoding"]
-
-    CORRELATION["Event Correlation<br/>Temporal + Logical Correlation"]
+    CORE["Core<br/>Event Processing + Protocol Decoding<br/>+ Correlation"]
 
     TIMELINE["Unified Timeline<br/>Communication Blocks"]
 
@@ -45,7 +39,11 @@ flowchart TD
     BUS --> CN
     WIRELESS --> WIRELESS_CAPTURE
 
-    CN --> CORE
+    NET_CAPTURE --> TIMESTAMP
+    CN --> TIMESTAMP
+    WIRELESS_CAPTURE --> TIMESTAMP
+
+    TIMESTAMP --> CORE
     CORE --> TIMELINE
     TIMELINE --> ANALYST
 ```
@@ -74,8 +72,6 @@ flowchart TD
 
 ### Assumptions & Dependencies
 - Capture Nodes and the Core can synchronize to a common local time reference.
-
-- The Brain can synchronize to a common local time reference.
 - Required hardware for supported network, onboard-bus, wireless, and snapshot monitoring is available.
 - Snapshot capabilities depend on the type of Snapshot Node being used.
 - Maximum supported nodes, protocols, latency, and clock drift require validation on the final hardware configuration.
@@ -233,12 +229,12 @@ flowchart TD
 - Accurate search/flagging depends on reliable timestamps from time sync (FR-MON-04).
 - Session storage/format depends on BR-DEP export-import design (FR-DEP-02-x).
 - At-rest protection of exported findings depends on FR-SEC-01 (encryption at rest).
-- The finding count metric (FR-ANA-06-3) depends on the flagging logic defined in FR-ANA-05-2; changes to detection patterns will affect the reported count.
+- The finding count metric (FR-ANA-06-4) depends on the flagging logic defined in FR-ANA-05-1; changes to detection patterns will affect the reported count.
 
 ### Open Questions
 - What default credential/token patterns should auto-flagging (FR-ANA-05-1) detect out of the box?
 - What diagram type(s)/tooling will be used to generate behavior diagrams (FR-ANA-03-1)?
-- Which export formats will be supported for v1 (FR-ANA-04-3)?
+- Which export formats will be supported for v1 (FR-ANA-04)?
 - BR-ANA-01 does not define behavior if an analyst leaves a session running indefinitely (e.g., forgets to stop it) — should there be a maximum session duration, an idle timeout, or is indefinite recording acceptable?
 
 ---
@@ -315,12 +311,12 @@ _The system shall run on Docker with fixed, predictable versions, and let users 
 
 | FR ID | Requirement | Priority | Acceptance Criteria |
 |---|---|---|---|
-| FR-DEP-01-1 | System components (Core + all dependencies) shall be packaged as Docker images defined via Dockerfile(s) and orchestrated via Docker Compose. | Must | Each system component has a corresponding Dockerfile and is defined as a service in `docker compose build` and that it completes successfully with exit code 0. |
-| FR-DEP-01-2 | All image versions shall be pinned (no :`latest tags`; only locked dependency versions) | Must | Every `FROM` in all Dockerfiles and every image: in `docker-compose.yml` — has an explicit version tag (e.g. postgres:16.3), not latest . |
-| FR-DEP-01-3 | All Dockerfile install steps shall install strictly from the lockfile or requirments.txt with specified versions. | Must | No use of npm install, or unpinned pip install in place of their lockfile-strict equivalents.
-| FR-DEP-02-1 | The system shall provide a function to export the current configuration and recorded session data to a file stored outside the container's writable layer  | Should | Confirm persistence after the container is stopped/removed. |
-| FR-DEP-02-2 | The system shall provide a function to import previously exported configuration and recorded session data into a running or newly deployed instance. | Should | Import a previously exported data into both  a running instance and  a freshly deployed instance; confirm the operation completes successfully in both cases. |
-| FR-DEP-02-3| The system shall log export and import operations, including timestamp and outcome (failure only). | Should | Perform successful and failed export/import operations; confirm failed operations are recorded. |
+| FR-DEP-01-1 | System components (Core + all dependencies) shall be packaged as Docker images defined via Dockerfile(s) and orchestrated via Docker Compose. | Must | Each system component has a corresponding Dockerfile, is defined as a service in `docker-compose.yml`, and `docker compose build` completes successfully with exit code 0. |
+| FR-DEP-01-2 | All image versions shall be pinned (no `:latest` tags; only locked dependency versions). | Must | Every `FROM` in all Dockerfiles and every `image:` in `docker-compose.yml` has an explicit version tag (e.g. `postgres:16.3`), not `latest`. |
+| FR-DEP-01-3 | All Dockerfile install steps shall install strictly from the lockfile or `requirements.txt` with specified versions. | Must | No use of `npm install`, or unpinned `pip install`, in place of their lockfile-strict equivalents. |
+| FR-DEP-02-1 | The system shall provide a function to export the current configuration and recorded session data to a file stored outside the container's writable layer. | Should | Confirm persistence after the container is stopped/removed. |
+| FR-DEP-02-2 | The system shall provide a function to import previously exported configuration and recorded session data into a running or newly deployed instance. | Should | Import previously exported data into both a running instance and a freshly deployed instance; confirm the operation completes successfully in both cases. |
+| FR-DEP-02-3 | The system shall log export and import operations, including timestamp and outcome (failure only). | Should | Perform successful and failed export/import operations; confirm failed operations are recorded. |
 
 ### Assumptions & Dependencies
 - The application has a defined, versioned schema for configuration and session data to support import validation.
